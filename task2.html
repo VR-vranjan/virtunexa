@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Map with Markers</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
+        #map { height: 80vh; width: 100%; }
+        #controls { padding: 10px; background: #f4f4f4; text-align: center; }
+    </style>
+</head>
+<body>
+    <div id="controls">
+        <label for="note">Add Note:</label>
+        <input type="text" id="note" placeholder="Enter note for marker">
+        <button onclick="addMarker()">Add Marker</button>
+    </div>
+    <div id="map"></div>
+    
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        var map = L.map('map').setView([20.5937, 78.9629], 5);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        function addMarker() {
+            var note = document.getElementById("note").value;
+            if (!note) {
+                alert("Please enter a note!");
+                return;
+            }
+            
+            map.on('click', function(e) {
+                var marker = L.marker([e.latlng.lat, e.latlng.lng]).addTo(map);
+                marker.bindPopup(note).openPopup();
+                document.getElementById("note").value = ""; // Clear input
+                map.off('click'); // Prevent multiple markers from a single input
+            });
+        }
+    </script>
+</body>
+</html>
